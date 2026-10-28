@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#17324d">
+<title>Pension / DROP Comparison</title>
+<style>
+:root{--navy:#17324d;--blue:#245a81;--bg:#f3f6f9;--card:#fff;--text:#17212b;--muted:#5c6874;--line:#d9e1e8;--accent:#e7f1fa;--green:#e8f5ee;--green-strong:#28734b;--drop-panel:#edf5fc;--nodrop-panel:#eef8f1;--compare-panel:#f6f3fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.4}
+header{background:var(--navy);color:white;padding:22px 18px 20px;padding-top:calc(22px + env(safe-area-inset-top))}
+header h1{font-size:23px;line-height:1.15;margin:0 0 8px}header p{font-size:14px;margin:0;color:#e0eaf2}
+main{max-width:760px;margin:auto;padding:14px 12px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 13px;box-shadow:0 2px 7px #17324d0b}
+h2{font-size:18px;margin:0 0 12px;color:var(--navy)}.hint{font-size:13px;color:var(--muted);margin:-4px 0 13px}
+.field{margin:13px 0 0}.field label{display:block;font-weight:650;font-size:14px;margin-bottom:6px}
+input,select{font:inherit;width:100%;min-height:48px;border:1px solid #aebdca;border-radius:10px;padding:10px 12px;background:white;color:var(--text)}
+input:focus,select:focus{outline:3px solid #c7e1f8;border-color:var(--blue)}
+.unit{font-size:12px;color:var(--muted);margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result{background:var(--accent);border-radius:12px;padding:13px;margin-top:10px}.result .label{font-size:13px;color:#334b60}.result .value{font-size:22px;font-weight:750;color:var(--navy);margin-top:3px;overflow-wrap:anywhere}
+.results-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+.result-panel{border:1px solid var(--line);border-radius:14px;padding:13px;min-width:0}
+.result-panel h3{font-size:16px;margin:0 0 10px;line-height:1.25}
+.result-panel.drop-panel{background:var(--drop-panel);border-color:#b8d4e8}
+.result-panel.drop-panel h3{color:var(--blue)}
+.result-panel.nodrop-panel{background:var(--nodrop-panel);border-color:#b9ddc5}
+.result-panel.nodrop-panel h3{color:var(--green-strong)}
+.result-panel.compare-panel{background:var(--compare-panel);border-color:#d8cbed}
+.result-panel.compare-panel h3{color:#60458b}
+.result-panel .result{background:#fff;margin-top:9px;border:1px solid #ffffffb5}
+.result-panel .result .value{font-size:20px}
+.result-panel .hint{margin:10px 0 0;font-size:12px}
+@media(max-width:620px){.results-grid{grid-template-columns:1fr}}
+.callout{font-size:13px;background:#fff8e7;border:1px solid #f0d89b;border-radius:10px;padding:11px;color:#5c4819}
+footer{font-size:12px;color:var(--muted);padding:0 4px 16px}
+button{border:0;border-radius:10px;padding:12px 14px;font:inherit;font-weight:650;background:var(--blue);color:white;width:100%;min-height:48px;margin-top:10px}
+@media(max-width:420px){.grid{grid-template-columns:1fr}header h1{font-size:21px}.result .value{font-size:21px}}
+</style>
+</head>
+<body>
+<header><h1>Pension / DROP Comparison</h1><p>Compare entering DROP versus continuing employment without DROP.</p></header>
+<main>
+<section class="card">
+<h2>1. Pension and DROP inputs</h2>
+<p class="hint">Enter the values in the editable fields. Calculated answers update automatically.</p>
+<div class="field"><label for="pensionAtDrop">Certified annual pension at DROP entry</label><input id="pensionAtDrop" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter annual amount"><div class="unit">Annual amount before applying the pension percentage</div></div>
+<div class="grid">
+<div class="field"><label for="yearsAtDrop">PERF 77 service years at DROP entry</label><input id="yearsAtDrop" type="number" inputmode="decimal" min="20" max="32" step="0.5" placeholder="e.g. 25 or 25.5"><div class="unit">Use half-year entries such as 25.5 to add 1%; a full year adds 2% because it contains two 6-month increments.</div></div>
+<div class="field"><label for="percentAtDropDisplay">Automatically calculated pension percentage</label><input id="percentAtDropDisplay" type="text" value="" placeholder="Calculated automatically" readonly aria-readonly="true"><div class="unit">20 years = 52%; 20.5 = 53%; 21 = 54%; then +1% per additional 6 months, capped at 76% at 32 years.</div></div>
+</div>
+<div class="field"><label for="dropMonths">Length of DROP (months)</label><input id="dropMonths" type="number" inputmode="numeric" min="12" max="60" step="1" placeholder="12–60 months"><div class="unit">Workbook specifies 12 to 60 months.</div></div>
+</section>
+<section class="card">
+<h2>2. Estimate if you do not enter DROP</h2>
+<div class="field"><label for="pensionAtExit">Estimated certified annual pension at planned retirement</label><input id="pensionAtExit" type="number" inputmode="decimal" min="0" step="100" placeholder="Enter annual amount"></div>
+<div class="grid">
+<div class="field"><label for="yearsNoDrop">Service years if you do not enter DROP</label><input id="yearsNoDrop" type="number" inputmode="decimal" min="20" max="32" step="0.5" placeholder="e.g. 28 or 28.5"><div class="unit">Use half-year entries such as 28.5 to add 1%; a full year adds 2% because it contains two 6-month increments.</div></div>
+<div class="field"><label for="percentNoDropDisplay">Automatically calculated pension percentage</label><input id="percentNoDropDisplay" type="text" value="" placeholder="Calculated automatically" readonly aria-readonly="true"><div class="unit">20 years = 52%; 20.5 = 53%; 21 = 54%; then +1% per additional 6 months, capped at 76% at 32 years.</div></div>
+</div>
+</section>
+<section class="card">
+<h2>3. Calculated results</h2>
+<p class="hint">The results are separated by retirement choice to make the differences easier to see.</p>
+<div class="results-grid">
+<section class="result-panel drop-panel" aria-labelledby="dropResultsTitle">
+<h3 id="dropResultsTitle">A. Enter DROP</h3>
+<div class="result"><div class="label">Annual pension at DROP entry</div><div class="value" id="annualDrop">—</div></div>
+<div class="result"><div class="label">Monthly pension at DROP entry</div><div class="value" id="monthlyDrop">—</div></div>
+<div class="result"><div class="label">Accumulated DROP benefit at exit</div><div class="value" id="dropBenefit">—</div></div>
+</section>
+<section class="result-panel nodrop-panel" aria-labelledby="noDropResultsTitle">
+<h3 id="noDropResultsTitle">B. Do Not Enter DROP</h3>
+<div class="result"><div class="label">Annual pension at planned retirement</div><div class="value" id="annualNoDrop">—</div></div>
+<div class="result"><div class="label">Monthly pension at planned retirement</div><div class="value" id="monthlyNoDrop">—</div></div>
+</section>
+<section class="result-panel compare-panel" aria-labelledby="comparisonTitle">
+<h3 id="comparisonTitle">C. Side-by-Side Comparison</h3>
+<div class="result"><div class="label">Annual pension difference</div><div class="value" id="annualDiff">—</div></div>
+<div class="result"><div class="label">Monthly pension difference</div><div class="value" id="monthlyDiff">—</div></div>
+<div class="result"><div class="label">Break-even estimate</div><div class="value" id="breakEven">—</div></div>
+<p class="hint">Differences compare the no-DROP pension with the pension at DROP entry. Break-even is the DROP benefit divided by the annual pension difference, and is meaningful only when that difference is positive.</p>
+</section>
+</div>
+<button type="button" id="reset">Clear all inputs</button>
+</section>
+<div class="callout"><strong>Important:</strong> This calculator mirrors the formulas in the uploaded workbook; it does not verify PERF rules or guarantee a pension amount. Confirm inputs and assumptions with PERF / your plan administrator before making a retirement decision.</div>
+<footer>Mobile-friendly prototype based on “Pension Comparison, Drop (V2).xlsx”. Use the browser’s Share menu and “Add to Home Screen” after the app is hosted on a website.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function pensionPct(years){
+ // 20 years = 52%; every completed 0.5 year adds 1%; cap at 32 years / 76%.
+ const bounded=Math.min(32,Math.max(20,years));
+ const halfYears=Math.floor((bounded-20)*2+1e-8);
+ return Math.min(76,52+halfYears);
+}
+const money=n=>Number.isFinite(n)?n.toLocaleString('en-US',{style:'currency',currency:'USD'}):'—';
+const raw=id=>{const text=$(id).value.trim();if(text==='')return null;const v=Number(text);return Number.isFinite(v)?v:null};
+function set(id,v){$(id).textContent=v}
+function calculate(){
+ const p1=raw('pensionAtDrop'), years1=raw('yearsAtDrop'), months=raw('dropMonths');
+ const p2=raw('pensionAtExit'), years2=raw('yearsNoDrop');
+ $('percentAtDropDisplay').value=years1===null?'':pensionPct(years1)+'%';
+ $('percentNoDropDisplay').value=years2===null?'':pensionPct(years2)+'%';
+ const complete=p1!==null&&years1!==null&&months!==null&&p2!==null&&years2!==null;
+ if(!complete){
+  ['annualDrop','monthlyDrop','dropBenefit','annualNoDrop','monthlyNoDrop','annualDiff','monthlyDiff','breakEven'].forEach(id=>set(id,'—'));
+ } else {
+  const pct1=pensionPct(years1)/100, pct2=pensionPct(years2)/100;
+  const annual1=p1*pct1, monthly1=annual1/12, drop=monthly1*months;
+  const annual2=p2*pct2, monthly2=annual2/12, diff=annual2-annual1, mdiff=diff/12;
+  set('annualDrop',money(annual1));set('monthlyDrop',money(monthly1));set('dropBenefit',money(drop));
+  set('annualNoDrop',money(annual2));set('monthlyNoDrop',money(monthly2));set('annualDiff',money(diff));set('monthlyDiff',money(mdiff));
+  set('breakEven',diff>0?(drop/diff).toFixed(2)+' years':'Not applicable');
+ }
+ $('dropMonths').setCustomValidity(months!==null&&(months<12||months>60)?'Enter a DROP duration from 12 to 60 months.':'');
+}
+['pensionAtDrop','dropMonths','pensionAtExit','yearsNoDrop','yearsAtDrop'].forEach(id=>$(id).addEventListener('input',calculate));
+$('reset').addEventListener('click',()=>{ ['pensionAtDrop','yearsAtDrop','dropMonths','pensionAtExit','yearsNoDrop'].forEach(id=>$(id).value='');calculate();});
+calculate();
+</script>
+</body></html>
